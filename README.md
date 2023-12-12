@@ -5,11 +5,11 @@ May A. Beydoun, PhD, MPH1,#,*; Rio Tate, PhD1,#; Michael F. Georgescu, MPH1; Aly
 
 The repository includes five folders:
 
+FIGURE1
 SYNTAX
-OUTPUT_MAINANALYSIS
-OUTPUT_SECONDARYANALYSIS1
-OUTPUT_SECONDARYANALYSIS2
-OUTPUT_SECONDARYANALYSIS3
+OUTPUT
+
+The Output folder includes several smcl and pdf files that equivalent to each other, and include the main and sensitivity analyses for this manuscript. 
 
 Data used from HRS includes the following:
 hrsdementia_2021_1109.sas7bdat
