@@ -21,3 +21,9 @@ Data can be accessed freely after registration on:
 https://hrs.isr.umich.edu/about
 
 
+
+The manuscript is accepted in Aging US. 
+
+
+
+
