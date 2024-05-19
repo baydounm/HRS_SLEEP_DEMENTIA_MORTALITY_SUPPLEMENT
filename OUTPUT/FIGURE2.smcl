@@ -1,0 +1,357 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. use finaldata_imputed_FINAL,clear
+{txt}
+{com}. 
+. 
+. **STEP 14: FIGURE 2: COMPARE SURVIVAL PROBABILITIES ACROSS EXPOSURE (poorsleep_2006, create tertiles) AND MEDIATOR LEVELS (hurd_dem expert_dem lasso_dem)**
+. 
+. mi extract 0
+{txt}
+{com}. 
+. save finaldata_unimputed_FINAL, replace
+{txt}{p 0 4 2}
+file {bf}
+finaldata_unimputed_FINAL.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. stset ageevent if sample_final==1, failure(died==1) enter(AGE2006) origin(AGE2006) scale(1)
+
+{txt}Survival-time data settings
+
+{col 10}Failure event: {res}died==1
+{col 1}{txt}Observed time interval: {res}(origin, ageevent]
+{col 6}{txt}Enter on or after: {res}time AGE2006
+{col 6}{txt}Exit on or before: {res}failure
+{col 6}{txt}Time for analysis: {res}(time-origin)
+{col 17}{txt}Origin: {res}time AGE2006
+{col 7}{txt}Keep observations 
+{col 17}{help j_st_ifvsoptif:{bf:if} {it:exp}}: {res}sample_final==1
+
+{txt}{hline 74}
+{res}     43,561{txt}  total observations
+{res}     36,570{txt}  ignored at outset because of {bf:if} {it:exp}
+{res}         40{txt}  event time missing (ageevent>=.){col 61}PROBABLE ERROR
+{res}          6{txt}  observations end on or before {bf:enter()}
+{hline 74}
+{res}      6,945{txt}  observations remaining, representing
+{res}      4,892{txt}  failures in single-record/single-failure data
+{res} 66,265.112{txt}  total analysis time at risk and under observation
+                                                At risk from t = {res}        0
+                                     {txt}Earliest observed entry t = {res}        0
+                                          {txt}Last observed exit t = {res}   15.658
+{txt}
+{com}. 
+. 
+. stdescribe if sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}{col 36}{c LT}{hline 14} Per subject {hline 14}{c RT}
+Category{col 28}Total{col 41}Mean{col 54}Min{col 62}Median{col 76}Max
+{hline 78}
+Number of subjects    {res}      6945   
+{txt}Number of records     {res}      6945           1           1          1          1
+
+{txt}Entry time (first)                 {res}        0           0          0          0
+{txt}Exit time (final)                  {res} 9.541413    .0998611   10.10123     15.658
+
+{txt}Subjects with gap     {res}         0   
+{txt}Time on gap           {res}         0   
+{txt}Time at risk          {res} 66265.112    9.541413    .0998611   10.10123     15.658
+
+{txt}Failures              {res}      4892    .7043916           0          1          1
+{txt}{hline 78}
+
+{com}. stsum if sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}{col 10}{c |}{col 26}Incidence{col 40}Number of{col 52}{c LT}{hline 6} Survival time {hline 5}{c RT}
+        {col 10}{c |} Time at risk{col 31}rate{col 41}subjects{col 57}25%{col 67}50%{col 77}75%
+{hline 9}{c +}{hline 69}
+   Total {c |} {res} 66,265.1117   .0738247{col 40}     6945   5.187416  10.10123         .
+{txt}
+{com}. strate if sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}Estimated failure rates
+Number of records = {res}6945
+{txt}
+  {c TLC}{hline 6}{c -}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c TRC}
+  {c |} {res}   D         Y       Rate      Lower      Upper {txt}{c |}
+  {c LT}{hline 6}{c -}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c RT}
+  {c |} {res}4892   6.6e+04   0.073825   0.071785   0.075923 {txt}{c |}
+  {c BLC}{hline 6}{c -}{hline 9}{c -}{hline 10}{c -}{hline 10}{c -}{hline 10}{c BRC}
+   Notes: Rate = D/Y = failures/person-time.
+          Lower and Upper are bounds of 95% confidence intervals.
+
+
+{com}. 
+. save, replace
+{txt}{p 0 4 2}
+file {bf}
+finaldata_unimputed_FINAL.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. capture drop poorsleep_2006tert
+{txt}
+{com}. xtile poorsleep_2006tert=poorsleep_2006 if sample_final==1,nq(3)
+{txt}
+{com}. 
+. bysort poorsleep_2006tert: su poorsleep_2006 if sample_final==1,detail
+
+{txt}{hline}
+-> poorsleep_2006tert = 1
+
+                       poorsleep_2006
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}        0              0
+{txt} 5%    {res}        0              0
+{txt}10%    {res}        0              0       {txt}Obs         {res}      2,372
+{txt}25%    {res}        0              0       {txt}Sum of wgt. {res}      2,372
+
+{txt}50%    {res}        0                      {txt}Mean          {res}  .489882
+                        {txt}Largest       Std. dev.     {res}  .500003
+{txt}75%    {res}        1              1
+{txt}90%    {res}        1              1       {txt}Variance      {res}  .250003
+{txt}95%    {res}        1              1       {txt}Skewness      {res} .0404805
+{txt}99%    {res}        1              1       {txt}Kurtosis      {res} 1.001639
+
+{txt}{hline}
+-> poorsleep_2006tert = 2
+
+                       poorsleep_2006
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}        2              2
+{txt} 5%    {res}        2              2
+{txt}10%    {res}        2              2       {txt}Obs         {res}      3,173
+{txt}25%    {res}        2              2       {txt}Sum of wgt. {res}      3,173
+
+{txt}50%    {res}        3                      {txt}Mean          {res} 2.895682
+                        {txt}Largest       Std. dev.     {res} .8125883
+{txt}75%    {res}        4              4
+{txt}90%    {res}        4              4       {txt}Variance      {res} .6602998
+{txt}95%    {res}        4              4       {txt}Skewness      {res} .1927942
+{txt}99%    {res}        4              4       {txt}Kurtosis      {res} 1.539746
+
+{txt}{hline}
+-> poorsleep_2006tert = 3
+
+                       poorsleep_2006
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}        5              5
+{txt} 5%    {res}        5              5
+{txt}10%    {res}        5              5       {txt}Obs         {res}      1,446
+{txt}25%    {res}        5              5       {txt}Sum of wgt. {res}      1,446
+
+{txt}50%    {res}        6                      {txt}Mean          {res} 6.132089
+                        {txt}Largest       Std. dev.     {res} 1.185194
+{txt}75%    {res}        7              9
+{txt}90%    {res}        8              9       {txt}Variance      {res} 1.404686
+{txt}95%    {res}        8              9       {txt}Skewness      {res} .8089262
+{txt}99%    {res}        9              9       {txt}Kurtosis      {res} 2.648532
+
+{txt}{hline}
+-> poorsleep_2006tert = .
+
+                       poorsleep_2006
+{hline 61}
+no observations
+
+
+{com}. 
+. save, replace
+{txt}{p 0 4 2}
+file {bf}
+finaldata_unimputed_FINAL.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. sts test poorsleep_2006tert if sample_final==1, logrank
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+{err}{p 0 4 2}
+file {bf:{err}C:\Users\baydounm\AppData\Local\Temp\ST_6434_000002.tmp}
+already exists
+{p_end}
+{txt}{search r(602), local:r(602);}
+
+end of do-file
+
+{search r(602), local:r(602);}
+
+{com}. do "C:\Users\baydounm\AppData\Local\Temp\STD6434_000000.tmp"
+{txt}
+{com}. 
+. sts test poorsleep_2006tert if sample_final==1, logrank
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}Equality of survivor functions
+Log-rank test
+
+{col 13} {c |}  Observed       Expected
+poorsleep_~t {c |}    events         events
+{hline 13}{c +}{hline 25}
+           1 {c |}{res}      1624        1684.20
+           {txt}2 {c |}{res}      2209        2240.75
+           {txt}3 {c |}{res}      1059         967.06
+{txt}{hline 13}{c +}{hline 25}
+       Total {c |}{res}      4892        4892.00
+
+                       {txt}chi2(2) =  {res}11.35
+                       {txt}Pr>chi2 = {res}0.0034
+{txt}
+{com}. sts graph if sample_final==1, by(poorsleep_2006tert) 
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+{txt}
+{com}. 
+. graph save "FIGURE2A.gph", replace
+{res}{txt}file {bf:FIGURE2A.gph} saved
+
+{com}. 
+. sts test hurd_dem if sample_final==1, logrank
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}Equality of survivor functions
+Log-rank test
+
+{col 9} {c |}  Observed       Expected
+hurd_dem {c |}    events         events
+{hline 9}{c +}{hline 25}
+       0 {c |}{res}      3800        4513.15
+       {txt}1 {c |}{res}      1092         378.85
+{txt}{hline 9}{c +}{hline 25}
+   Total {c |}{res}      4892        4892.00
+
+                  {txt}chi2(1) = {res}1490.81
+                  {txt}Pr>chi2 =  {res}0.0000
+{txt}
+{com}. sts graph if sample_final==1, by(hurd_dem) 
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+{txt}
+{com}. 
+. 
+. graph save "FIGURE2B.gph", replace
+{res}{txt}file {bf:FIGURE2B.gph} saved
+
+{com}. 
+. 
+. sts test expert_dem if sample_final==1, logrank
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}Equality of survivor functions
+Log-rank test
+
+{col 11} {c |}  Observed       Expected
+expert_dem {c |}    events         events
+{hline 11}{c +}{hline 25}
+         0 {c |}{res}      3768        4494.94
+         {txt}1 {c |}{res}      1124         397.06
+{txt}{hline 11}{c +}{hline 25}
+     Total {c |}{res}      4892        4892.00
+
+                    {txt}chi2(1) = {res}1483.65
+                    {txt}Pr>chi2 =  {res}0.0000
+{txt}
+{com}. sts graph if sample_final==1, by(expert_dem) 
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+{txt}
+{com}. 
+. 
+. graph save "FIGURE2C.gph", replace
+{res}{txt}file {bf:FIGURE2C.gph} saved
+
+{com}. 
+. 
+. sts test lasso_dem if sample_final==1, logrank
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+
+{txt}Equality of survivor functions
+Log-rank test
+
+{col 10} {c |}  Observed       Expected
+lasso_dem {c |}    events         events
+{hline 10}{c +}{hline 25}
+        0 {c |}{res}      3697        4440.75
+        {txt}1 {c |}{res}      1195         451.25
+{txt}{hline 10}{c +}{hline 25}
+    Total {c |}{res}      4892        4892.00
+
+                   {txt}chi2(1) = {res}1381.29
+                   {txt}Pr>chi2 =  {res}0.0000
+{txt}
+{com}. sts graph if sample_final==1, by(lasso_dem) 
+
+{col 10}{txt}Failure {bf:_d}: {res}died==1
+{col 4}{txt}Analysis time {bf:_t}: {res}(ageevent-origin)
+{col 14}{txt}Origin: {res}time AGE2006
+{col 3}{txt}Enter on or after: {res}time AGE2006
+{txt}
+{com}. 
+. 
+. graph save "FIGURE2D.gph", replace
+{res}{txt}file {bf:FIGURE2D.gph} saved
+
+{com}. 
+. graph combine "FIGURE2A.gph" "FIGURE2B.gph" "FIGURE2C.gph" "FIGURE2D.gph"
+{res}{txt}
+{com}. graph save "FIGURE2.gph", replace
+{res}{txt}file {bf:FIGURE2.gph} saved
+
+{com}. 
+. capture log close
+{smcl}
+{com}{sf}{ul off}
