@@ -22,7 +22,7 @@ https://hrs.isr.umich.edu/about
 
 
 
-The manuscript is accepted in Aging US. 
+The manuscript is published in Aging US. 
 
 
 
